@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ICommute</string>
+
+    <string name="title_section1">by bus/route No</string>
+    <string name="title_section2">by Area</string>
+    <string name="title_section3">using my location</string>
+
+    <string name="emp_num">Enter your employee number</string>
+    <string name="disclaimer">This application requests access to your current location</string>
+    <string name="register">Register</string>
+    <string name="agree">I Agree</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Find stops</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_register">Register</string>
+</resources>
