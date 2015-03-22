@@ -3,10 +3,12 @@ package com.busktimachu.icommute.icommute;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,11 +46,14 @@ public class RegisterActivity extends ActionBarActivity {
         //setupActionBar();
         Log.d(logTag, "in method onCreate");
         serverUrl = getIntent().getStringExtra(S_URL);
-        if (serverUrl != null) {
+        if (serverUrl != null && !serverUrl.isEmpty()) {
             Log.d(logTag, "server address received:"+serverUrl);
         }
         else{
             Log.e(logTag, "Server address not found");
+            Toast.makeText(getApplicationContext(), "set server address, opening settings", Toast.LENGTH_SHORT).show();
+            Intent settings = new Intent(RegisterActivity.this, SettingsActivity.class);
+            startActivity(settings);
         }
         agree = (CheckBox) findViewById(R.id.checkBox);
         register = (Button) findViewById(R.id.button);
@@ -63,6 +68,14 @@ public class RegisterActivity extends ActionBarActivity {
             // Show the Up button in the action bar.
             getActionBar().setHomeButtonEnabled(true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences settingPref = PreferenceManager.getDefaultSharedPreferences(this);
+        serverUrl = settingPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDR, "");
     }
 
     @Override
@@ -105,8 +118,9 @@ public class RegisterActivity extends ActionBarActivity {
                         getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
+                    Log.d(logTag, "Registering with server:"+serverUrl);
                     Toast.makeText(getApplicationContext(), "Registering...", Toast.LENGTH_SHORT).show();
-                    new RegisterAppTask().execute("http://192.168.1.3:8080/?emp_id="+empno);
+                    new RegisterAppTask().execute(serverUrl+"/?emp_id="+empno);
                 } else {
                     // display error
                     Toast.makeText(getApplicationContext(), "Could not connect to network, check your internet connection", Toast.LENGTH_SHORT).show();

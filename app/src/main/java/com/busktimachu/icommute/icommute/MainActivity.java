@@ -3,6 +3,7 @@ package com.busktimachu.icommute.icommute;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ public class MainActivity extends ActionBarActivity
     private String prekey = "u_id";
     private String uid;
     private int REQUEST_CODE = 1;
+    private String server_url;
 
 
     /**
@@ -67,10 +69,13 @@ public class MainActivity extends ActionBarActivity
 
         sharepref = getSharedPreferences(prefile,MODE_PRIVATE);
         uid= sharepref.getString(prekey, "");
+        SharedPreferences settingPref = PreferenceManager.getDefaultSharedPreferences(this);
+        server_url = settingPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDR, "");
+
 
         if (uid.isEmpty()) {
             Intent register = new Intent(MainActivity.this, RegisterActivity.class);
-            register.putExtra(S_URL,"http://192.168.1.3:8080");
+            register.putExtra(S_URL,server_url);
             startActivityForResult(register,REQUEST_CODE);
         }
     }
