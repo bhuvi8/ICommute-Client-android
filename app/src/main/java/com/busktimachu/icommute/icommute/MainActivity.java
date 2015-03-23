@@ -52,7 +52,6 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
 
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -61,6 +60,27 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            SelectRouteFragment routeFragment = new SelectRouteFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            routeFragment.setArguments(getIntent().getExtras());
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, routeFragment).commit();
+        }
     }
 
     @Override
@@ -90,7 +110,7 @@ public class MainActivity extends ActionBarActivity
                 edit.commit();
             }
             if (resultCode == RESULT_CANCELED) {
-                //Write your code if there's no result
+                //TODO: handle registration failures
             }
         }
     }
@@ -109,9 +129,24 @@ public class MainActivity extends ActionBarActivity
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
+
+                SelectRouteFragment routeFragment = new SelectRouteFragment();
+
+                // In case this activity was started with special instructions from an
+                // Intent, pass the Intent's extras to the fragment as arguments
+                routeFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, routeFragment).commit();
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
+                SelectAreaFragment areaFragment = new SelectAreaFragment();
+
+                // In case this activity was started with special instructions from an
+                // Intent, pass the Intent's extras to the fragment as arguments
+                areaFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, areaFragment).commit();
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);

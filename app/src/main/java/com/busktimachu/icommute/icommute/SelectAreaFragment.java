@@ -71,11 +71,16 @@ public class SelectAreaFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "101",
-                        "102",
-                        "103",
-                        "104",
-                        "105"
+                        "Adambakkam",
+                        "Anna nagar",
+                        "Adyar",
+                        "Besant Nagar",
+                        "Shollinganallur",
+                        "Nungambakkam",
+                        "Gopalapuram",
+                        "Hasthinapuram",
+                        "Kovilambakkam",
+                        "Kelambakkam",
                 }));
         rRouteView.setItemChecked(mCurrentSelectedPosition, true);
         return rRouteView;
