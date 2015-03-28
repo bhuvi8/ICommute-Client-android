@@ -22,12 +22,16 @@ public class MainActivity extends ActionBarActivity
     public static final String UNIQUE_ID = "com.busktimachu.icommute.icommute.UID";
     private final String logTag = "iCommute mainActivity";
 
+    ICommuteAlarmReceiver alarm = new ICommuteAlarmReceiver();
+
     private SharedPreferences sharepref;
     private String prefile = "STOR_FILE";
     private String prekey = "u_id";
     private String uid;
     private int REQUEST_CODE = 1;
     private String server_url;
+    private String sync_freq;
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -71,8 +75,8 @@ public class MainActivity extends ActionBarActivity
             // Intent, pass the Intent's extras to the fragment as arguments
             routeFragment.setArguments(getIntent().getExtras());
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, routeFragment).commit();
+            //getSupportFragmentManager().beginTransaction()
+              //      .add(R.id.container, routeFragment).commit();
         }
     }
 
@@ -90,6 +94,11 @@ public class MainActivity extends ActionBarActivity
             Intent register = new Intent(MainActivity.this, RegisterActivity.class);
             register.putExtra(S_URL,server_url);
             startActivityForResult(register,REQUEST_CODE);
+        }
+        else {
+           sync_freq = settingPref.getString(SettingsActivity.KEY_PREF_UPDATE_CHECK_FREQ, "");
+            Log.d(logTag, "In onResume...,received settingpref update_freq:"+sync_freq);
+           alarm.setAlarm(this);
         }
     }
 

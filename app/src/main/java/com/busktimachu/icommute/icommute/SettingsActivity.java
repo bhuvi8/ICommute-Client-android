@@ -2,6 +2,7 @@ package com.busktimachu.icommute.icommute;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -43,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity {
     private static final boolean ALWAYS_SIMPLE_PREFS = true;
 
     public static final String KEY_PREF_SERVER_ADDR = "server_address";
+    public static final String KEY_PREF_UPDATE_CHECK_FREQ = "sync_frequency";
 
 
     @Override
@@ -61,6 +63,7 @@ public class SettingsActivity extends PreferenceActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -247,7 +250,7 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+            bindPreferenceSummaryToValue(findPreference("update_notifications"));
         }
     }
 

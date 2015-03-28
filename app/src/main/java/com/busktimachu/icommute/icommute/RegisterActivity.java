@@ -36,7 +36,7 @@ public class RegisterActivity extends ActionBarActivity {
     private EditText empnbr;
     private Button register;
     private CheckBox agree;
-    private final String logTag = "iCommute";
+    private final String logTag = "iCommute RegisterActvty";
     private String serverUrl;
 
     @Override

@@ -32,6 +32,6 @@
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
-    <string name="pref_title_new_message_notifications">Notify for route map updates</string>
+    <string name="pref_title_new_data_notifications">Notify for route map updates</string>
 
 </resources>
