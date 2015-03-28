@@ -45,6 +45,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     public static final String KEY_PREF_SERVER_ADDR = "server_address";
     public static final String KEY_PREF_UPDATE_CHECK_FREQ = "sync_frequency";
+    public static final String KEY_PREF_UPDATE_NOTIFY = "update_notifications";
 
 
     @Override
@@ -120,8 +121,8 @@ public class SettingsActivity extends PreferenceActivity {
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        bindPreferenceSummaryToValue(findPreference("server_address"));
-        bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+        bindPreferenceSummaryToValue(findPreference(KEY_PREF_SERVER_ADDR));
+        bindPreferenceSummaryToValue(findPreference(KEY_PREF_UPDATE_CHECK_FREQ));
     }
 
     /**
@@ -250,7 +251,7 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("update_notifications"));
+            bindPreferenceSummaryToValue(findPreference(KEY_PREF_UPDATE_NOTIFY));
         }
     }
 
@@ -269,7 +270,7 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+            bindPreferenceSummaryToValue(findPreference(KEY_PREF_UPDATE_CHECK_FREQ));
         }
     }
 }

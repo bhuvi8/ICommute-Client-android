@@ -22,6 +22,7 @@ public class MainActivity extends ActionBarActivity
     public static final String UNIQUE_ID = "com.busktimachu.icommute.icommute.UID";
     private final String logTag = "iCommute mainActivity";
 
+
     ICommuteAlarmReceiver alarm = new ICommuteAlarmReceiver();
 
     private SharedPreferences sharepref;
@@ -96,9 +97,14 @@ public class MainActivity extends ActionBarActivity
             startActivityForResult(register,REQUEST_CODE);
         }
         else {
-           sync_freq = settingPref.getString(SettingsActivity.KEY_PREF_UPDATE_CHECK_FREQ, "");
-            Log.d(logTag, "In onResume...,received settingpref update_freq:"+sync_freq);
-           alarm.setAlarm(this);
+           sync_freq = settingPref.getString(SettingsActivity.KEY_PREF_UPDATE_CHECK_FREQ,ICommuteAlarmReceiver.SYNC_DISABLED);
+            Log.d(logTag, "In onResume,received setting update_freq:"+sync_freq);
+            if ( Integer.parseInt(sync_freq) == -1) {
+                alarm.cancelAlarm(this);
+            }
+            else {
+                alarm.setAlarm(this);
+            }
         }
     }
 

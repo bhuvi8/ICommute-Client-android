@@ -48,14 +48,14 @@ public class NewRouteDataNotification {
 
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
+        //final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
 
 
         final String ticker = exampleString;
         final String title = res.getString(
-                R.string.new_route_data_notification_title_template, exampleString);
+                R.string.new_route_data_notification_title, exampleString);
         final String text = res.getString(
-                R.string.new_route_data_notification_placeholder_text_template, exampleString);
+                R.string.new_route_data_notification_text, exampleString);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
@@ -65,7 +65,7 @@ public class NewRouteDataNotification {
 
                         // Set required fields, including the small icon, the
                         // notification title, and text.
-                .setSmallIcon(R.drawable.ic_action_stat_reply)
+                .setSmallIcon(R.drawable.ic_action_download)
                 .setContentTitle(title)
                 .setContentText(text)
 
@@ -77,7 +77,7 @@ public class NewRouteDataNotification {
 
                         // Provide a large icon, shown with the notification in the
                         // notification drawer on devices running Android 3.0 or later.
-                .setLargeIcon(picture)
+                //.setLargeIcon(picture)
 
                         // Set ticker text (preview) information for this notification.
                 .setTicker(ticker)
@@ -109,7 +109,7 @@ public class NewRouteDataNotification {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(text)
                         .setBigContentTitle(title)
-                        .setSummaryText("Dummy summary text"))
+                        .setSummaryText(text))
 
                         // Example additional actions for this notification. These will
                         // only show on devices running Android 4.1 or later, so you
@@ -117,19 +117,15 @@ public class NewRouteDataNotification {
                         // content intent provides access to the same actions in
                         // another way.
                 .addAction(
-                        R.drawable.ic_action_stat_share,
-                        res.getString(R.string.action_share),
+                        R.drawable.ic_action_download,
+                        res.getString(R.string.action_download),
                         PendingIntent.getActivity(
                                 context,
                                 0,
                                 Intent.createChooser(new Intent(Intent.ACTION_SEND)
                                         .setType("text/plain")
-                                        .putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
+                                        .putExtra(Intent.EXTRA_TEXT, text), title),
                                 PendingIntent.FLAG_UPDATE_CURRENT))
-                .addAction(
-                        R.drawable.ic_action_stat_reply,
-                        res.getString(R.string.action_reply),
-                        null)
 
                         // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);

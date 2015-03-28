@@ -5,7 +5,7 @@
     <CheckBoxPreference
         android:key="update_notifications"
         android:title="@string/pref_title_new_data_notifications"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
 
 </PreferenceScreen>

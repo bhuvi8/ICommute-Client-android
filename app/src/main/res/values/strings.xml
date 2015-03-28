@@ -18,12 +18,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_register">Register</string>
 
-    <string name="new_route_data_notification_title_template">New route data: %1$s</string>
+    <string name="new_route_data_notification_title">Route Update: %1$s</string>
 
-    <!-- TODO: remove this placeholder text -->
-    <string name="new_route_data_notification_placeholder_text_template">Download
+    <string name="new_route_data_notification_text">Download updates
     </string>
 
-    <string name="action_share">Share</string>
-    <string name="action_reply">Reply</string>
+    <string name="action_download">Download</string>
 </resources>

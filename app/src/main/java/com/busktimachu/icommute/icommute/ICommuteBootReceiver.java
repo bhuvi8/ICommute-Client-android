@@ -10,13 +10,14 @@ public class ICommuteBootReceiver extends BroadcastReceiver {
     ICommuteAlarmReceiver alarm = new ICommuteAlarmReceiver();
     public String logTag = "ICommute BootReceiver";
 
-    public ICommuteBootReceiver() {
-    }
+    //public ICommuteBootReceiver() {
+    //}
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(logTag, "In onReceive...received boot complete broadcast");
-        if (intent.getAction().equals("android.intent.action.Boot_COMPLETED")) {
+        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            Log.d(logTag, "Inside boot complete intent if cond");
             alarm.setAlarm(context);
         }
     }

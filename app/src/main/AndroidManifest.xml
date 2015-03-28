@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
 
     <application
         android:allowBackup="true"
@@ -37,9 +41,11 @@
                 android:value="com.busktimachu.icommute.icommute.MainActivity" />
         </activity>
 
+        <receiver android:name=".ICommuteAlarmReceiver" />
+
         <service
-            android:name=".RouteUpdateCheckService"
-            android:exported="false" >
+            android:name=".RouteUpdateCheckService">
+           // android:exported="false" >
         </service>
 
         <receiver
@@ -47,7 +53,7 @@
             android:enabled="false"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>
