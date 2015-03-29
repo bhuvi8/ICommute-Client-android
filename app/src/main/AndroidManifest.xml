@@ -44,9 +44,8 @@
         <receiver android:name=".ICommuteAlarmReceiver" />
 
         <service
-            android:name=".RouteUpdateCheckService">
-           // android:exported="false" >
-        </service>
+            android:name=".RouteUpdateCheckService"/>
+            //android:exported="false" >
 
         <receiver
             android:name=".ICommuteBootReceiver"

@@ -49,6 +49,8 @@ public class NewRouteDataNotification {
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
         //final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
+        //TODO: Call download when user clicks download from notification.
+        //TODO: DISPLAY Download progress in notification
 
 
         final String ticker = exampleString;

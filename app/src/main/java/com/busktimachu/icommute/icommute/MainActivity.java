@@ -1,5 +1,11 @@
 package com.busktimachu.icommute.icommute;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +19,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 
 public class MainActivity extends ActionBarActivity
@@ -69,15 +85,6 @@ public class MainActivity extends ActionBarActivity
             if (savedInstanceState != null) {
                 return;
             }
-
-            SelectRouteFragment routeFragment = new SelectRouteFragment();
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            routeFragment.setArguments(getIntent().getExtras());
-
-            //getSupportFragmentManager().beginTransaction()
-              //      .add(R.id.container, routeFragment).commit();
         }
     }
 
@@ -104,6 +111,7 @@ public class MainActivity extends ActionBarActivity
             }
             else {
                 alarm.setAlarm(this);
+                new LoadDBTask().execute();
             }
         }
     }
@@ -197,5 +205,132 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class LoadDBTask extends AsyncTask<Void, Integer, String> {
+        ProgressDialog progressDialog;
+        //AlertDialog alertDialog;
+        @Override
+        protected void onPreExecute() {
+            progressDialog= ProgressDialog.show(MainActivity.this, "Checking for new data","Importing new data...", true);
+            //progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        }
+
+        @Override
+        protected String doInBackground(Void...params) {
+
+            if (isExternalStorageReadable()) {
+                File file = new File(getExternalFilesDir(null), "route_map.dat");
+                try {
+                    InputStream is = new FileInputStream(file);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    try {
+                        String line;
+                        Integer progress = 10;
+                        ICommuteDBHelper mDbHelper = new ICommuteDBHelper(getApplicationContext());
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                        while ((line = reader.readLine()) != null) {
+                            insertToDb(db,line );
+                            //if ((progress % 100) == 0 ) {
+                                publishProgress(progress);
+                            //}
+                            progress += progress;
+                        }
+                        is.close();
+                        db.close();
+                    }
+                    catch (IOException e) {
+                        return "FAILED";
+                    }
+                    finally {
+                        file.delete();
+                        Log.i(logTag,"Inp file processed, deleting...");
+                    }
+
+                }
+                catch (FileNotFoundException e) {
+                    Log.i(logTag,"No file found, nothing to do...");
+                }
+            }
+            else {
+                Log.e(logTag,"External storage not readable, cant read inp file...");
+            }
+            return "Done";
+        }
+
+        protected void onProgressUpdate(final Integer... values) {
+            progressDialog.incrementProgressBy(values[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.contentEquals("FAILED")){
+                Log.i(logTag,"in onPostExecute...load failed");
+
+                progressDialog= ProgressDialog.show(MainActivity.this, "Import Failed", "", true);
+            }
+            else {
+                progressDialog.dismiss();
+            }
+        }
+
+        private boolean insertToDb(SQLiteDatabase db,String line) {
+
+            long newRouteId;
+            long newAreaId;
+            long newLandmarkId;
+
+            Log.i(logTag,"Inside insertToDb...");
+
+            String[] RowData = line.split(",");
+
+            ContentValues routeValues = new ContentValues();
+            routeValues.put(ICommuteDB.Route_txt.COLUMN_NAME_ROUTE_NAME, RowData[0]);
+
+            newRouteId = db.insert(
+                    ICommuteDB.Route_txt.TABLE_NAME,
+                    null,
+                    routeValues);
+
+            ContentValues areaValues = new ContentValues();
+            areaValues.put(ICommuteDB.Area_txt.COLUMN_NAME_AREA_NAME, RowData[2]);
+
+            newAreaId = db.insert(
+                    ICommuteDB.Area_txt.TABLE_NAME,
+                    null,
+                    areaValues);
+
+            ContentValues landmarkValues = new ContentValues();
+            landmarkValues.put(ICommuteDB.Landmark_txt.COLUMN_NAME_LANDMARK_NAME, RowData[3]);
+
+            newLandmarkId = db.insert(
+                    ICommuteDB.Landmark_txt.TABLE_NAME,
+                    null,
+                    landmarkValues);
+
+            ContentValues routemapValues = new ContentValues();
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_ROUTE_ID, newRouteId);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_AREA_ID, newAreaId);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_LANDMARK_ID, newLandmarkId);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_ETA, RowData[1]);
+
+            db.insert(
+                    ICommuteDB.Route_map.TABLE_NAME,
+                    null,
+                    routemapValues);
+
+            return true;
+        }
+
+        /* Checks if external storage is available to read */
+        public boolean isExternalStorageReadable() {
+            String state = Environment.getExternalStorageState();
+            if (Environment.MEDIA_MOUNTED.equals(state) ||
+                    Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                return true;
+            }
+            return false;
+        }
     }
 }

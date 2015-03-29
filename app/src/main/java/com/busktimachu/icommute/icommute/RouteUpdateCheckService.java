@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -76,15 +78,22 @@ public class RouteUpdateCheckService extends IntentService {
         Log.d(logTag, "In onHandleIntent...service triggered");
         if (intent != null) {
             final String action = intent.getAction();
-            Log.d(logTag, "Intent action:"+action);
-            if (ACTION_CHECK_UPDATE.equals(action)) {
-                //final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                //final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionCheckUpdate(); //param1, param2);
-            } else if (ACTION_DOWNLOAD_UPDATE.equals(action)) {
-                //final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                //final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                //handleActionDownloadUpdate(); //param1, param2);
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                Log.d(logTag, "Intent action:"+action);
+                if (ACTION_CHECK_UPDATE.equals(action)) {
+                    //final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+                    //final String param2 = intent.getStringExtra(EXTRA_PARAM2);
+                    handleActionCheckUpdate(); //param1, param2);
+                } else if (ACTION_DOWNLOAD_UPDATE.equals(action)) {
+                    //final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+                    //final String param2 = intent.getStringExtra(EXTRA_PARAM2);
+                    //handleActionDownloadUpdate(); //param1, param2);
+                }
+            } else {
+                Log.i(logTag, "network not available, deferring update check to next window");
             }
         }
         ICommuteAlarmReceiver.completeWakefulIntent(intent);
@@ -122,6 +131,7 @@ public class RouteUpdateCheckService extends IntentService {
     }
 
     private void handleActionDownloadUpdate(String fileHash) {
+        //TODO: verify downloaded file by matching calculated checksum against server provided one
         Log.d(logTag, "In handleActionDownloadUpdate");
         sharepref = getSharedPreferences(prefile,MODE_PRIVATE);
         uid = sharepref.getString(keyUid, "");
@@ -241,16 +251,6 @@ public class RouteUpdateCheckService extends IntentService {
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    /* Checks if external storage is available to at least read */
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
             return true;
         }
         return false;
