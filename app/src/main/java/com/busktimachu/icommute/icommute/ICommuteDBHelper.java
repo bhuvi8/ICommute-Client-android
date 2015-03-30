@@ -14,18 +14,13 @@ public class ICommuteDBHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(ICommuteDB.CREATE_TABLE_ROUTE_TXT);
-        db.execSQL(ICommuteDB.CREATE_TABLE_AREA_TXT);
-        db.execSQL(ICommuteDB.CREATE_TABLE_LANDMARK_TXT);
         db.execSQL(ICommuteDB.CREATE_TABLE_ROUTE_MAP);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(ICommuteDB.DELETE_TABLE_ROUTE_TXT);
-        db.execSQL(ICommuteDB.DELETE_TABLE_AREA_TXT);
-        db.execSQL(ICommuteDB.DELETE_TABLE_LANDMARK_TXT);
+        //TODO : if temp route change file is provided add logic to backup and delete
         db.execSQL(ICommuteDB.DELETE_TABLE_ROUTE_MAP);
         onCreate(db);
     }

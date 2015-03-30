@@ -165,14 +165,6 @@ public class SelectAreaFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.action_maps) {
-            Toast.makeText(getActivity(), "Opening Maps", Toast.LENGTH_SHORT).show();
-            //TODO : open maps
-            //Intent settings = new Intent(NavigationDrawerFragment.this, .class);
-            //startActivity(settings);
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

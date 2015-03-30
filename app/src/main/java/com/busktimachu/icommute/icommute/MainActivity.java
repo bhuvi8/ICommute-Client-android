@@ -3,6 +3,7 @@ package com.busktimachu.icommute.icommute;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -203,6 +204,16 @@ public class MainActivity extends ActionBarActivity
             startActivity(settings);
             return true;
         }
+        if (item.getItemId() == R.id.action_refresh) {
+            Context context = getApplicationContext();
+            Toast.makeText(context, "Checking for route updates", Toast.LENGTH_SHORT).show();
+            //TODO : animate refresh button
+            Intent service = new Intent(context, RouteUpdateCheckService.class);
+            service.setAction(RouteUpdateCheckService.ACTION_CHECK_UPDATE);
+            startService(service);
+            new LoadDBTask().execute();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -277,42 +288,14 @@ public class MainActivity extends ActionBarActivity
 
         private boolean insertToDb(SQLiteDatabase db,String line) {
 
-            long newRouteId;
-            long newAreaId;
-            long newLandmarkId;
-
             Log.i(logTag,"Inside insertToDb...");
 
             String[] RowData = line.split(",");
 
-            ContentValues routeValues = new ContentValues();
-            routeValues.put(ICommuteDB.Route_txt.COLUMN_NAME_ROUTE_NAME, RowData[0]);
-
-            newRouteId = db.insert(
-                    ICommuteDB.Route_txt.TABLE_NAME,
-                    null,
-                    routeValues);
-
-            ContentValues areaValues = new ContentValues();
-            areaValues.put(ICommuteDB.Area_txt.COLUMN_NAME_AREA_NAME, RowData[2]);
-
-            newAreaId = db.insert(
-                    ICommuteDB.Area_txt.TABLE_NAME,
-                    null,
-                    areaValues);
-
-            ContentValues landmarkValues = new ContentValues();
-            landmarkValues.put(ICommuteDB.Landmark_txt.COLUMN_NAME_LANDMARK_NAME, RowData[3]);
-
-            newLandmarkId = db.insert(
-                    ICommuteDB.Landmark_txt.TABLE_NAME,
-                    null,
-                    landmarkValues);
-
             ContentValues routemapValues = new ContentValues();
-            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_ROUTE_ID, newRouteId);
-            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_AREA_ID, newAreaId);
-            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_LANDMARK_ID, newLandmarkId);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_ROUTE_NAME, RowData[0]);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_AREA_NAME, RowData[2]);
+            routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_LANDMARK_NAME, RowData[3]);
             routemapValues.put(ICommuteDB.Route_map.COLUMN_NAME_ETA, RowData[1]);
 
             db.insert(
