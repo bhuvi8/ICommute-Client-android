@@ -47,7 +47,7 @@ public class RegisterActivity extends ActionBarActivity {
         Log.d(logTag, "in method onCreate");
         serverUrl = getIntent().getStringExtra(S_URL);
         if (serverUrl != null && !serverUrl.isEmpty()) {
-            Log.d(logTag, "server address received:"+serverUrl);
+            Log.d(logTag, "server address :"+serverUrl);
         }
         else{
             Log.e(logTag, "Server address not found");
@@ -159,7 +159,7 @@ public class RegisterActivity extends ActionBarActivity {
 
         private String downloadUrl(String myUrl) throws IOException {
             InputStream is = null;
-            int len = 16;
+            int len;
 
             try {
                 URL url = new URL(myUrl);
@@ -173,7 +173,8 @@ public class RegisterActivity extends ActionBarActivity {
                 int response = conn.getResponseCode();
                 Log.d(logTag, "The response is: " + response);
                 is = conn.getInputStream();
-
+                len = conn.getContentLength();
+                Log.d(logTag, "Content length : " + len);
                 // Convert the InputStream into a string
                 String contentAsString = readIt(is, len);
                 return contentAsString;
